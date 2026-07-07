@@ -11,6 +11,7 @@ import pytest_html
 def driver():
     # Inicialización del navegador
     options = webdriver.ChromeOptions()
+    options.add.argument("--headless=new")
     options.add_argument("--incognito")
 
     driver = webdriver.Chrome(options = options)
