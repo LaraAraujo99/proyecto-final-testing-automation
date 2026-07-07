@@ -2,32 +2,20 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from page.login_page import LoginPage
-from utils.logger import logger
+from utils.data_reader import read_users_csv
 import pytest
 
-@pytest.mark.smoke
-def test_login_ok(driver):
-  logger.info("Inicializando el driver para test_login_ok")
-  login_page = LoginPage(driver)
-  
-  logger.info("Ingresando los datos de entrada para la prueba")
-  login_page.login("standard_user", "secret_sauce")
+@pytest.mark.parametrize("user", read_users_csv())
+def test_login(driver,user):
+    login_page = LoginPage(driver)
 
-  logger.info("Iniciando sesión...")
+    login_page.login(user["username"],user["password"])
+    if user["valid"] == "true":    
+      assert "/inventory.html" in driver.current_url, "No se redirigió al invntario"
+    else: 
+       error = login_page.get_error_message()
+       assert "Epic sadface" in error
 
-  assert "/inventory.html" in driver.current_url, "No se redirigio al inventario"
- 
-  
-def test_login_invalid_password(driver):
-  login_page = LoginPage(driver)
-
-  login_page.login("standard_user","1234")
-
-  error = login_page.get_error_message()
-
-  assert "Epic sadface: Username and password do not match any user in this service" in error
-
-  # assert error == "Hola"
 
 
 
