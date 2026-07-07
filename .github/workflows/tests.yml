@@ -15,11 +15,11 @@ jobs:
 
       - name: Configurar python
         uses: actions/setup-python@v5
-        whit:
+        with:
           python-versions: "3.14.4"
 
       - name: Instalar dependencias
-        runs: |
+        run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
